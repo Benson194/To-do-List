@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:to_do_list/config/constant.dart';
+import 'package:to_do_list/helper/date_time_helper.dart';
 import 'package:to_do_list/helper/size_config.dart';
+import 'package:to_do_list/model/NoteModel.dart';
+import 'package:to_do_list/screens/edit_screen/edit_screen.dart';
 import 'package:to_do_list/theme/color.dart';
+import 'package:to_do_list/theme/font.dart';
 import 'package:to_do_list/theme/shape.dart';
+import 'package:intl/intl.dart';
 
 class CreateScreen extends StatefulWidget {
   const CreateScreen({Key? key}) : super(key: key);
@@ -13,6 +17,28 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
+  List<NoteModel> noteModelList = [
+    // NoteModel(
+    //     id: 0,
+    //     startDateTime: DateTime.parse("1969-07-20 20:18:04Z"),
+    //     endDateTime: DateTime.parse("1969-07-20 24:48:04Z"),
+    //     completed: false,
+    //     title: "Note 1"),
+    // NoteModel(
+    //     id: 1,
+    //     startDateTime: DateTime.parse("1969-07-20 20:18:04Z"),
+    //     endDateTime: DateTime.parse("1969-07-21 20:48:04Z"),
+    //     completed: false,
+    //     title: "Note 2"),
+    // NoteModel(
+    //     id: 2,
+    //     startDateTime: DateTime.parse("1969-07-20 20:18:04Z"),
+    //     endDateTime: DateTime.parse("1969-07-21 00:48:04Z"),
+    //     completed: false,
+    //     title: "Note 3")
+  ];
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +49,7 @@ class _CreateScreenState extends State<CreateScreen> {
         title: Text(
           appName,
           textAlign: TextAlign.start,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: appBarTextStyle,
         ),
       ),
       body: SafeArea(
@@ -31,7 +57,7 @@ class _CreateScreenState extends State<CreateScreen> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView.builder(
-              itemCount: 6,
+              itemCount: noteModelList.length,
               itemBuilder: (context, i) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -55,12 +81,12 @@ class _CreateScreenState extends State<CreateScreen> {
                             child: Column(
                               children: [
                                 Text(
-                                  "bottomLeft:fadsdRadius.circular(cardBorderRadius), Radius.circular(cardBorde Radius.circular(cardBorde Radius.circular(cardBorde",
+                                  noteModelList[i].title == null
+                                      ? ""
+                                      : noteModelList[i].title!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                  style: heading1TextStyle,
                                 ),
                                 SizedBox(height: 15),
                                 Row(children: [
@@ -69,10 +95,20 @@ class _CreateScreenState extends State<CreateScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
                                       children: [
-                                        Text("Start Date",
-                                            textAlign: TextAlign.start),
-                                        Text("21 Oct 2019",
-                                            textAlign: TextAlign.start),
+                                        Text(
+                                          "Start Date",
+                                          textAlign: TextAlign.start,
+                                          style: heading3TextStyle,
+                                        ),
+                                        Text(
+                                            noteModelList[i].startDateTime ==
+                                                    null
+                                                ? ""
+                                                : formatter.format(
+                                                    noteModelList[i]
+                                                        .startDateTime!),
+                                            textAlign: TextAlign.start,
+                                            style: heading4TextStyle),
                                       ],
                                     ),
                                   ),
@@ -81,10 +117,20 @@ class _CreateScreenState extends State<CreateScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
                                       children: [
-                                        Text("End Date",
-                                            textAlign: TextAlign.start),
-                                        Text("23 Oct 2019",
-                                            textAlign: TextAlign.start),
+                                        Text(
+                                          "End Date",
+                                          textAlign: TextAlign.start,
+                                          style: heading3TextStyle,
+                                        ),
+                                        Text(
+                                            noteModelList[i].startDateTime ==
+                                                    null
+                                                ? ""
+                                                : formatter.format(
+                                                    noteModelList[i]
+                                                        .endDateTime!),
+                                            textAlign: TextAlign.start,
+                                            style: heading4TextStyle),
                                       ],
                                     ),
                                   ),
@@ -93,10 +139,24 @@ class _CreateScreenState extends State<CreateScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
                                       children: [
-                                        Text("Time Left",
-                                            textAlign: TextAlign.start),
-                                        Text("23 hours 22 mins",
-                                            textAlign: TextAlign.start),
+                                        Text(
+                                          "Time Left",
+                                          textAlign: TextAlign.start,
+                                          style: heading3TextStyle,
+                                        ),
+                                        Text(
+                                            noteModelList[i].startDateTime ==
+                                                    null
+                                                ? ""
+                                                : DateTimeHelper
+                                                    .dateTimeDifference(
+                                                        noteModelList[
+                                                                i]
+                                                            .startDateTime!,
+                                                        noteModelList[i]
+                                                            .endDateTime!),
+                                            textAlign: TextAlign.start,
+                                            style: heading4TextStyle),
                                       ],
                                     ),
                                   ),
@@ -122,9 +182,12 @@ class _CreateScreenState extends State<CreateScreen> {
                                   children: [
                                     Text("Status: "),
                                     Text(
-                                      "Incomplete",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                      noteModelList[i].completed == null
+                                          ? "Incomplete"
+                                          : noteModelList[i].completed!
+                                              ? "Completed"
+                                              : "Incomplete",
+                                      style: heading4TextStyle,
                                     )
                                   ],
                                 ),
@@ -135,12 +198,18 @@ class _CreateScreenState extends State<CreateScreen> {
                                           const EdgeInsets.only(right: 8.0),
                                       child: Text("Tick if completed"),
                                     ),
-                                    Container(
-                                      height: 24.0,
-                                      width: 24.0,
-                                      child: Checkbox(
-                                        value: false,
-                                        onChanged: (bool? value) {},
+                                    Visibility(
+                                      visible:
+                                          noteModelList[i].completed == null
+                                              ? false
+                                              : !noteModelList[i].completed!,
+                                      child: Container(
+                                        height: 24.0,
+                                        width: 24.0,
+                                        child: Checkbox(
+                                          value: noteModelList[i].completed,
+                                          onChanged: (bool? value) {},
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -158,7 +227,12 @@ class _CreateScreenState extends State<CreateScreen> {
           )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditScreen(),
+            ),
+          );
         },
         child: const Icon(Icons.add),
         backgroundColor: Colors.red,
