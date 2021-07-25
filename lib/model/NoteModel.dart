@@ -3,7 +3,7 @@ import 'package:to_do_list/services/local_db.dart';
 import 'package:intl/intl.dart';
 
 class NoteModel {
-  // int? id;
+  int? id;
   DateTime? startDateTime;
   DateTime? endDateTime;
   bool? completed;
@@ -29,7 +29,7 @@ class NoteModel {
   }
 
   NoteModel.fromMap(Map<String, Object?> map) {
-    // id = map[LocalDatabase.columnId] as int;
+    id = map[LocalDatabase.columnId] as int;
     title = map[LocalDatabase.columnTitle] as String;
     completed = map[LocalDatabase.columnCompleted] == 1;
     startDateTime = DateTimeHelper.formatter

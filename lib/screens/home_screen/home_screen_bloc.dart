@@ -18,6 +18,10 @@ class HomeBloc extends Bloc<HomeEventAbstract, HomeState> {
         yield GetNoteLoading();
         List<NoteModel>? _noteList = await _repository.getNoteList();
         yield GetNoteSuccess(noteList: _noteList);
+      } else if (event is UpdateNoteEvent) {
+        yield UpdateNoteLoading();
+        await _repository.updateNote(event.rowId, event.completed ? 1 : 0);
+        yield UpdateNoteSuccess(rowId: event.rowId, completed: event.completed);
       }
     } catch (e) {
       yield GetNoteError();

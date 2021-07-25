@@ -12,3 +12,13 @@ class GetNoteSuccess extends HomeState {
 }
 
 class GetNoteError extends HomeState {}
+
+class UpdateNoteLoading extends HomeState {}
+
+class UpdateNoteSuccess extends HomeState {
+  final int rowId;
+  final bool completed;
+  UpdateNoteSuccess({required this.rowId, required this.completed});
+}
+
+class UpdateNoteError extends HomeState {}

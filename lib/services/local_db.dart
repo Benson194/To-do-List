@@ -18,7 +18,6 @@ class LocalDatabase {
   static Future open() async {
     var databasePath = await getDatabasesPath();
     String path = join(databasePath, dbName);
-
     db = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await db.execute('''
@@ -49,10 +48,14 @@ class LocalDatabase {
     return null;
   }
 
-  // Future<int> update(Todo todo) async {
-  //   return await db.update(tableTodo, todo.toMap(),
-  //       where: '$columnId = ?', whereArgs: [todo.id]);
-  // }
+  static Future<void> update(int _columnId, int _completed) async {
+    int rowUpdated = await db.rawUpdate(
+        '''UPDATE $tableName SET $columnCompleted = ? WHERE $columnId = ?''',
+        [_completed, _columnId]);
+    if (rowUpdated != 1) {
+      throw Error();
+    }
+  }
 
   static Future close() async => db.close();
 }

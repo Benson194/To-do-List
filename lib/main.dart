@@ -58,14 +58,6 @@ class _MyAppState extends State<MyApp> {
           theme: ThemeData(primaryColor: kPrimaryColor),
           debugShowCheckedModeBanner: false,
           home: HomeScreen(),
-          localizationsDelegates: [
-            FormBuilderLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: [
-            Locale('en', ''),
-          ],
           initialRoute: '/'),
     );
   }
