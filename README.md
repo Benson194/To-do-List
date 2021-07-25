@@ -1,16 +1,20 @@
-# to_do_list
+# Welcome
 
-A new Flutter project.
+To-Do list app made with ♥ with Flutter.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project runs on Flutter 2.0.2 version.
+#
+## Demo
+!["Demo"](assets/gif/demo.gif)
+#
+## Architecture Diagram
+!["Architecture Diagram"](assets/images/architecture_diagram.png)
+#
+## Used packages
+1. Flutter BLoC - To manage state efficiently
+2. Device preview - To ensure the UI looks and feels stay persist in different devices during development
+3. Flutter Form builder - Reduce the development time needed to create for form
+4. Fimber - One of the best logging tool that i always use
+5. SQLFlite - Persist data

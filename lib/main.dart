@@ -15,7 +15,7 @@ import 'config/constant.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kDebugMode) {
+  if (false) {
     runApp(
       DevicePreview(
         enabled: kDebugMode,

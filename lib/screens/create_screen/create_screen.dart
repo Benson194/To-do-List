@@ -163,7 +163,7 @@ class _CreateScreenState extends State<CreateScreen> {
                           )),
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          if (contentUpdated) {
+                          if (contentUpdated && widget.title != null) {
                             _createBloc.add(UpdateEvent(
                               rowId: widget.rowId!,
                               title:
@@ -176,8 +176,6 @@ class _CreateScreenState extends State<CreateScreen> {
                                       .currentState!.fields["end_date"]!.value),
                             ));
                           } else {
-                            Fimber.d("created");
-
                             _createBloc.add(CreateEvent(
                               title:
                                   _formKey.currentState!.fields["title"]!.value,
