@@ -80,6 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
             listener: (context, state) {
               if (state is CreateSuccss) {
                 _homeBloc.add(GetNoteEvent());
+              } else if (state is UpdateLoading) {
+                UIUtitilies.showLoadingDialog(context);
+              } else if (state is UpdateSuccss) {
+                Navigator.pop(context);
+                _homeBloc.add(GetNoteEvent());
+              } else if (state is UpdateError) {
+                Navigator.pop(context);
               }
             },
           )
@@ -104,182 +111,205 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, i) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Card(
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(cardBorderRadius),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(cardBorderRadius),
-                                  topLeft: Radius.circular(cardBorderRadius),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateScreen(
+                                  rowId: noteModelList[i].id!,
+                                  title: noteModelList[i].title!,
+                                  startDateTime:
+                                      noteModelList[i].startDateTime!,
+                                  endDateTime: noteModelList[i].endDateTime!,
                                 ),
-                                color: Colors.white,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      noteModelList[i].title == null
-                                          ? ""
-                                          : noteModelList[i].title!,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: heading1TextStyle,
-                                      textAlign: TextAlign.start,
-                                    ),
-                                    SizedBox(height: 15),
-                                    Row(children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text(
-                                              "Start Date",
-                                              textAlign: TextAlign.start,
-                                              style: heading3TextStyle,
-                                            ),
-                                            Text(
-                                                noteModelList[i]
-                                                            .startDateTime ==
-                                                        null
-                                                    ? ""
-                                                    : DateTimeHelper
-                                                        .formatterToDisplay
-                                                        .format(noteModelList[i]
-                                                            .startDateTime!),
-                                                textAlign: TextAlign.start,
-                                                style: heading4TextStyle),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text(
-                                              "End Date",
-                                              textAlign: TextAlign.start,
-                                              style: heading3TextStyle,
-                                            ),
-                                            Text(
-                                                noteModelList[i].endDateTime ==
-                                                        null
-                                                    ? ""
-                                                    : DateTimeHelper
-                                                        .formatterToDisplay
-                                                        .format(noteModelList[i]
-                                                            .endDateTime!),
-                                                textAlign: TextAlign.start,
-                                                style: heading4TextStyle),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text(
-                                              "Time Left",
-                                              textAlign: TextAlign.start,
-                                              style: heading3TextStyle,
-                                            ),
-                                            Text(
-                                                noteModelList[i]
-                                                            .startDateTime ==
-                                                        null
-                                                    ? ""
-                                                    : DateTimeHelper
-                                                        .dateTimeDifference(
-                                                            noteModelList[i]
-                                                                .startDateTime!,
-                                                            noteModelList[i]
-                                                                .endDateTime!),
-                                                textAlign: TextAlign.start,
-                                                style: heading4TextStyle),
-                                          ],
-                                        ),
-                                      ),
-                                    ])
-                                  ],
+                              ));
+                        },
+                        child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(cardBorderRadius),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(cardBorderRadius),
+                                    topLeft: Radius.circular(cardBorderRadius),
+                                  ),
+                                  color: Colors.white,
                                 ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(cardBorderRadius),
-                                  bottomRight:
-                                      Radius.circular(cardBorderRadius),
-                                ),
-                                color: Colors.grey[100],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text("Status: "),
-                                        Text(
-                                          noteModelList[i].completed == null
-                                              ? "Incomplete"
-                                              : noteModelList[i].completed!
-                                                  ? "Completed"
-                                                  : "Incomplete",
-                                          style: heading4TextStyle,
-                                        )
-                                      ],
-                                    ),
-                                    Visibility(
-                                        visible:
-                                            noteModelList[i].completed == null
-                                                ? true
-                                                : noteModelList[i].completed!
-                                                    ? false
-                                                    : true,
-                                        child: Row(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 8.0),
-                                              child: Text("Tick if completed"),
-                                            ),
-                                            Container(
-                                              height: 24.0,
-                                              width: 24.0,
-                                              child: Checkbox(
-                                                value:
-                                                    noteModelList[i].completed,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    updatedListIndex = i;
-                                                  });
-                                                  _homeBloc.add(UpdateNoteEvent(
-                                                      rowId:
-                                                          noteModelList[i].id!,
-                                                      completed: value!));
-                                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        noteModelList[i].title == null
+                                            ? ""
+                                            : noteModelList[i].title!,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: heading1TextStyle,
+                                        textAlign: TextAlign.start,
+                                      ),
+                                      SizedBox(height: 15),
+                                      Row(children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text(
+                                                "Start Date",
+                                                textAlign: TextAlign.start,
+                                                style: heading3TextStyle,
                                               ),
-                                            ),
-                                          ],
-                                        )),
-                                  ],
+                                              Text(
+                                                  noteModelList[i]
+                                                              .startDateTime ==
+                                                          null
+                                                      ? ""
+                                                      : DateTimeHelper
+                                                          .formatterToDisplay
+                                                          .format(noteModelList[
+                                                                  i]
+                                                              .startDateTime!),
+                                                  textAlign: TextAlign.start,
+                                                  style: heading4TextStyle),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text(
+                                                "End Date",
+                                                textAlign: TextAlign.start,
+                                                style: heading3TextStyle,
+                                              ),
+                                              Text(
+                                                  noteModelList[i]
+                                                              .endDateTime ==
+                                                          null
+                                                      ? ""
+                                                      : DateTimeHelper
+                                                          .formatterToDisplay
+                                                          .format(noteModelList[
+                                                                  i]
+                                                              .endDateTime!),
+                                                  textAlign: TextAlign.start,
+                                                  style: heading4TextStyle),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text(
+                                                "Time Left",
+                                                textAlign: TextAlign.start,
+                                                style: heading3TextStyle,
+                                              ),
+                                              Text(
+                                                  noteModelList[i]
+                                                              .startDateTime ==
+                                                          null
+                                                      ? ""
+                                                      : DateTimeHelper
+                                                          .dateTimeDifference(
+                                                              noteModelList[i]
+                                                                  .startDateTime!,
+                                                              noteModelList[i]
+                                                                  .endDateTime!),
+                                                  textAlign: TextAlign.start,
+                                                  style: heading4TextStyle),
+                                            ],
+                                          ),
+                                        ),
+                                      ])
+                                    ],
+                                  ),
                                 ),
                               ),
-                            )
-                          ],
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft:
+                                        Radius.circular(cardBorderRadius),
+                                    bottomRight:
+                                        Radius.circular(cardBorderRadius),
+                                  ),
+                                  color: Colors.grey[100],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text("Status: "),
+                                          Text(
+                                            noteModelList[i].completed == null
+                                                ? "Incomplete"
+                                                : noteModelList[i].completed!
+                                                    ? "Completed"
+                                                    : "Incomplete",
+                                            style: heading4TextStyle,
+                                          )
+                                        ],
+                                      ),
+                                      Visibility(
+                                          visible:
+                                              noteModelList[i].completed == null
+                                                  ? true
+                                                  : noteModelList[i].completed!
+                                                      ? false
+                                                      : true,
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0),
+                                                child:
+                                                    Text("Tick if completed"),
+                                              ),
+                                              Container(
+                                                height: 24.0,
+                                                width: 24.0,
+                                                child: Checkbox(
+                                                  value: noteModelList[i]
+                                                      .completed,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      updatedListIndex = i;
+                                                    });
+                                                    _homeBloc.add(
+                                                        UpdateNoteEvent(
+                                                            rowId:
+                                                                noteModelList[i]
+                                                                    .id!,
+                                                            completed: value!));
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -288,12 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
               )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateScreen(),
-                ),
-              );
+              Navigator.pushNamed(context, createScreenRouteName);
             },
             child: const Icon(Icons.add),
             backgroundColor: Colors.red,

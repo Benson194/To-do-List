@@ -20,14 +20,19 @@ class Repository {
 
   Future<void> createNote(String startDatetime, String endDateTime,
       bool completed, String title) async {
-    LocalDatabase.insert(startDatetime, endDateTime, completed, title);
+    await LocalDatabase.insert(startDatetime, endDateTime, completed, title);
+  }
+
+  Future<void> updateNote(
+      int rowId, String startDatetime, String endDateTime, String title) async {
+    await LocalDatabase.updateNote(rowId, startDatetime, endDateTime, title);
   }
 
   Future<List<NoteModel>?> getNoteList() async {
     return await LocalDatabase.getNoteList();
   }
 
-  Future<void> updateNote(int columnId, int completed) async {
-    return await LocalDatabase.update(columnId, completed);
+  Future<void> updateCompleted(int columnId, int completed) async {
+    await LocalDatabase.updateCompleted(columnId, completed);
   }
 }

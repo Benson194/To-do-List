@@ -13,7 +13,13 @@ import 'package:to_do_list/theme/font.dart';
 import 'package:intl/intl.dart';
 
 class CreateScreen extends StatefulWidget {
-  const CreateScreen({Key? key}) : super(key: key);
+  final int? rowId;
+  final String? title;
+  final DateTime? startDateTime;
+  final DateTime? endDateTime;
+  const CreateScreen(
+      {this.rowId, this.title, this.startDateTime, this.endDateTime})
+      : super();
 
   @override
   _CreateScreenState createState() => _CreateScreenState();
@@ -22,6 +28,7 @@ class CreateScreen extends StatefulWidget {
 class _CreateScreenState extends State<CreateScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late CreateBloc _createBloc;
+  bool contentUpdated = false;
 
   @override
   void initState() {
@@ -66,6 +73,8 @@ class _CreateScreenState extends State<CreateScreen> {
                             SizedBox(height: 20),
                             FormBuilderTextField(
                               name: 'title',
+                              initialValue:
+                                  widget.title == null ? null : widget.title,
                               decoration: new InputDecoration(
                                   border: new OutlineInputBorder(
                                     borderSide:
@@ -76,8 +85,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               maxLines: 10,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
-                                FormBuilderValidators.max(context, 70),
+                                FormBuilderValidators.max(context, 400),
                               ]),
+                              onChanged: (value) => {contentUpdated = true},
                             ),
                             SizedBox(height: 33),
                             Text(
@@ -87,7 +97,10 @@ class _CreateScreenState extends State<CreateScreen> {
                             SizedBox(height: 20),
                             FormBuilderDateTimePicker(
                               name: 'start_date',
-                              onChanged: (val) {},
+                              onChanged: (val) {
+                                contentUpdated = true;
+                              },
+                              initialValue: widget.startDateTime,
                               inputType: InputType.both,
                               format: DateTimeHelper.formatter,
                               decoration: InputDecoration(
@@ -113,11 +126,11 @@ class _CreateScreenState extends State<CreateScreen> {
                             FormBuilderDateTimePicker(
                               name: 'end_date',
                               onChanged: (val) {
-                                // var b = DateTimeHelper.formatter.format(val!);
-                                // var a = val;
+                                contentUpdated = true;
                               },
                               format: DateTimeHelper.formatter,
                               inputType: InputType.both,
+                              initialValue: widget.endDateTime,
                               decoration: InputDecoration(
                                   labelText: 'Select a date',
                                   border: new OutlineInputBorder(
@@ -143,23 +156,39 @@ class _CreateScreenState extends State<CreateScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(18.0),
                             child: Text(
-                              "Create Now",
+                              widget.title == null ? "Create Now" : "Update",
                               style: buttonTextStyle,
                               textAlign: TextAlign.center,
                             ),
                           )),
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          _createBloc.add(CreateEvent(
-                            title:
-                                _formKey.currentState!.fields["title"]!.value,
-                            startDateTime: DateTimeHelper.formatter.format(
-                                _formKey
-                                    .currentState!.fields["start_date"]!.value),
-                            endDateTime: DateTimeHelper.formatter.format(
-                                _formKey
-                                    .currentState!.fields["end_date"]!.value),
-                          ));
+                          if (contentUpdated) {
+                            _createBloc.add(UpdateEvent(
+                              rowId: widget.rowId!,
+                              title:
+                                  _formKey.currentState!.fields["title"]!.value,
+                              startDateTime: DateTimeHelper.formatter.format(
+                                  _formKey.currentState!.fields["start_date"]!
+                                      .value),
+                              endDateTime: DateTimeHelper.formatter.format(
+                                  _formKey
+                                      .currentState!.fields["end_date"]!.value),
+                            ));
+                          } else {
+                            Fimber.d("created");
+
+                            _createBloc.add(CreateEvent(
+                              title:
+                                  _formKey.currentState!.fields["title"]!.value,
+                              startDateTime: DateTimeHelper.formatter.format(
+                                  _formKey.currentState!.fields["start_date"]!
+                                      .value),
+                              endDateTime: DateTimeHelper.formatter.format(
+                                  _formKey
+                                      .currentState!.fields["end_date"]!.value),
+                            ));
+                          }
                         }
                       },
                     ),
@@ -169,12 +198,12 @@ class _CreateScreenState extends State<CreateScreen> {
         );
       },
       listener: (BuildContext context, Object? state) {
-        if (state is CreateLoading) {
+        if (state is CreateLoading || state is UpdateLoading) {
           UIUtitilies.showLoadingDialog(context);
-        } else if (state is CreateSuccss) {
+        } else if (state is CreateSuccss || state is UpdateSuccss) {
           Navigator.pop(context);
           Navigator.pop(context);
-        } else if (state is CreateError) {
+        } else if (state is CreateError || state is UpdateError) {
           Navigator.pop(context);
         }
       },

@@ -31,12 +31,6 @@ class LocalDatabase {
     });
   }
 
-  static Future<void> insert(String startDatetime, String endDateTime,
-      bool completed, String title) async {
-    await db.insert(tableName,
-        NoteModel.toMap(startDatetime, endDateTime, completed, title));
-  }
-
   static Future<List<NoteModel>?> getNoteList() async {
     List<Map<String, Object?>> maps = await db.query(tableName);
     if (maps.length > 0) {
@@ -48,10 +42,26 @@ class LocalDatabase {
     return null;
   }
 
-  static Future<void> update(int _columnId, int _completed) async {
+  static Future<void> insert(String startDatetime, String endDateTime,
+      bool completed, String title) async {
+    await db.insert(tableName,
+        NoteModel.toMap(startDatetime, endDateTime, completed, title));
+  }
+
+  static Future<void> updateCompleted(int _columnId, int _completed) async {
     int rowUpdated = await db.rawUpdate(
         '''UPDATE $tableName SET $columnCompleted = ? WHERE $columnId = ?''',
         [_completed, _columnId]);
+    if (rowUpdated != 1) {
+      throw Error();
+    }
+  }
+
+  static Future<void> updateNote(int _rowId, String _startDatetime,
+      String _endDateTime, String _title) async {
+    int rowUpdated = await db.rawUpdate(
+        '''UPDATE $tableName SET $columnTitle = ?, $columnStartDateTime = ?, $columnEndDateTime = ? WHERE $columnId = ?''',
+        [_title, _startDatetime, _endDateTime, _rowId]);
     if (rowUpdated != 1) {
       throw Error();
     }

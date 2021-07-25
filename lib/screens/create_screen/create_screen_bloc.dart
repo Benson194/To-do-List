@@ -20,6 +20,11 @@ class CreateBloc extends Bloc<CreateEventAbstract, CreateState> {
         await _repository.createNote(
             event.startDateTime, event.endDateTime, false, event.title);
         yield CreateSuccss();
+      } else if (event is UpdateEvent) {
+        yield UpdateLoading();
+        await _repository.updateNote(
+            event.rowId, event.startDateTime, event.endDateTime, event.title);
+        yield UpdateSuccss();
       }
     } catch (e) {
       yield CreateError();
