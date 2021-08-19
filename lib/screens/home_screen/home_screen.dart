@@ -50,6 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  updateCompletedNote(int index) {
+    setState(() {
+      updatedListIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -73,6 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 setState(() {
                   noteModelList[updatedListIndex].completed = state.completed;
                 });
+              } else if (state is UpdateNoteCompletedSuccess) {
+                updateCompletedNote(state.rowId);
               }
             },
           ),
@@ -106,215 +114,8 @@ class _HomeScreenState extends State<HomeScreen> {
               bottom: false,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  itemCount: noteModelList.length,
-                  itemBuilder: (context, i) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateScreen(
-                                  rowId: noteModelList[i].id!,
-                                  title: noteModelList[i].title!,
-                                  startDateTime:
-                                      noteModelList[i].startDateTime!,
-                                  endDateTime: noteModelList[i].endDateTime!,
-                                ),
-                              ));
-                        },
-                        child: Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(cardBorderRadius),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(cardBorderRadius),
-                                    topLeft: Radius.circular(cardBorderRadius),
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(18.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Text(
-                                        noteModelList[i].title == null
-                                            ? ""
-                                            : noteModelList[i].title!,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: heading1TextStyle,
-                                        textAlign: TextAlign.start,
-                                      ),
-                                      SizedBox(height: 15),
-                                      Row(children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              Text(
-                                                "Start Date",
-                                                textAlign: TextAlign.start,
-                                                style: heading3TextStyle,
-                                              ),
-                                              Text(
-                                                  noteModelList[i]
-                                                              .startDateTime ==
-                                                          null
-                                                      ? ""
-                                                      : DateTimeHelper
-                                                          .formatterToDisplay
-                                                          .format(noteModelList[
-                                                                  i]
-                                                              .startDateTime!),
-                                                  textAlign: TextAlign.start,
-                                                  style: heading4TextStyle),
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              Text(
-                                                "End Date",
-                                                textAlign: TextAlign.start,
-                                                style: heading3TextStyle,
-                                              ),
-                                              Text(
-                                                  noteModelList[i]
-                                                              .endDateTime ==
-                                                          null
-                                                      ? ""
-                                                      : DateTimeHelper
-                                                          .formatterToDisplay
-                                                          .format(noteModelList[
-                                                                  i]
-                                                              .endDateTime!),
-                                                  textAlign: TextAlign.start,
-                                                  style: heading4TextStyle),
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              Text(
-                                                "Time Left",
-                                                textAlign: TextAlign.start,
-                                                style: heading3TextStyle,
-                                              ),
-                                              Text(
-                                                  noteModelList[i]
-                                                              .startDateTime ==
-                                                          null
-                                                      ? ""
-                                                      : DateTimeHelper
-                                                          .dateTimeDifference(
-                                                              noteModelList[i]
-                                                                  .startDateTime!,
-                                                              noteModelList[i]
-                                                                  .endDateTime!),
-                                                  textAlign: TextAlign.start,
-                                                  style: heading4TextStyle),
-                                            ],
-                                          ),
-                                        ),
-                                      ])
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft:
-                                        Radius.circular(cardBorderRadius),
-                                    bottomRight:
-                                        Radius.circular(cardBorderRadius),
-                                  ),
-                                  color: Colors.grey[100],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(18.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text("Status: "),
-                                          Text(
-                                            noteModelList[i].completed == null
-                                                ? "Incomplete"
-                                                : noteModelList[i].completed!
-                                                    ? "Completed"
-                                                    : "Incomplete",
-                                            style: heading4TextStyle,
-                                          )
-                                        ],
-                                      ),
-                                      Visibility(
-                                          visible:
-                                              noteModelList[i].completed == null
-                                                  ? true
-                                                  : noteModelList[i].completed!
-                                                      ? false
-                                                      : true,
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0),
-                                                child:
-                                                    Text("Tick if completed"),
-                                              ),
-                                              Container(
-                                                height: 24.0,
-                                                width: 24.0,
-                                                child: Checkbox(
-                                                  value: noteModelList[i]
-                                                      .completed,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      updatedListIndex = i;
-                                                    });
-                                                    _homeBloc.add(
-                                                        UpdateNoteEvent(
-                                                            rowId:
-                                                                noteModelList[i]
-                                                                    .id!,
-                                                            completed: value!));
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child:
+                    NoteList(noteModelList: noteModelList, homeBloc: _homeBloc),
               )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -326,5 +127,200 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
         ));
+  }
+}
+
+class NoteList extends StatelessWidget {
+  const NoteList({
+    Key? key,
+    required this.noteModelList,
+    required HomeBloc homeBloc,
+  })   : _homeBloc = homeBloc,
+        super(key: key);
+
+  final List<NoteModel> noteModelList;
+  final HomeBloc _homeBloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: noteModelList.length,
+      itemBuilder: (context, i) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateScreen(
+                      rowId: noteModelList[i].id!,
+                      title: noteModelList[i].title!,
+                      startDateTime: noteModelList[i].startDateTime!,
+                      endDateTime: noteModelList[i].endDateTime!,
+                    ),
+                  ));
+            },
+            child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(cardBorderRadius),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(cardBorderRadius),
+                        topLeft: Radius.circular(cardBorderRadius),
+                      ),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            noteModelList[i].title == null
+                                ? ""
+                                : noteModelList[i].title!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: heading1TextStyle,
+                            textAlign: TextAlign.start,
+                          ),
+                          SizedBox(height: 15),
+                          Row(children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    "Start Date",
+                                    textAlign: TextAlign.start,
+                                    style: heading3TextStyle,
+                                  ),
+                                  Text(
+                                      noteModelList[i].startDateTime == null
+                                          ? ""
+                                          : DateTimeHelper.formatterToDisplay
+                                              .format(noteModelList[i]
+                                                  .startDateTime!),
+                                      textAlign: TextAlign.start,
+                                      style: heading4TextStyle),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    "End Date",
+                                    textAlign: TextAlign.start,
+                                    style: heading3TextStyle,
+                                  ),
+                                  Text(
+                                      noteModelList[i].endDateTime == null
+                                          ? ""
+                                          : DateTimeHelper.formatterToDisplay
+                                              .format(noteModelList[i]
+                                                  .endDateTime!),
+                                      textAlign: TextAlign.start,
+                                      style: heading4TextStyle),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    "Time Left",
+                                    textAlign: TextAlign.start,
+                                    style: heading3TextStyle,
+                                  ),
+                                  Text(
+                                      noteModelList[i].startDateTime == null
+                                          ? ""
+                                          : DateTimeHelper.dateTimeDifference(
+                                              noteModelList[i].startDateTime!,
+                                              noteModelList[i].endDateTime!),
+                                      textAlign: TextAlign.start,
+                                      style: heading4TextStyle),
+                                ],
+                              ),
+                            ),
+                          ])
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(cardBorderRadius),
+                        bottomRight: Radius.circular(cardBorderRadius),
+                      ),
+                      color: Colors.grey[100],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text("Status: "),
+                              Text(
+                                noteModelList[i].completed == null
+                                    ? "Incomplete"
+                                    : noteModelList[i].completed!
+                                        ? "Completed"
+                                        : "Incomplete",
+                                style: heading4TextStyle,
+                              )
+                            ],
+                          ),
+                          Visibility(
+                              visible: noteModelList[i].completed == null
+                                  ? true
+                                  : noteModelList[i].completed!
+                                      ? false
+                                      : true,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Text("Tick if completed"),
+                                  ),
+                                  Container(
+                                    height: 24.0,
+                                    width: 24.0,
+                                    child: Checkbox(
+                                      value: noteModelList[i].completed,
+                                      onChanged: (value) {
+                                        _homeBloc.add(
+                                            UpdateNoteCompletedEvent(index: i));
+                                        _homeBloc.add(UpdateNoteEvent(
+                                            rowId: noteModelList[i].id!,
+                                            completed: value!));
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
