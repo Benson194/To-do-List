@@ -1,4 +1,3 @@
-import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -10,7 +9,6 @@ import 'package:to_do_list/screens/create_screen/create_screen_event.dart';
 import 'package:to_do_list/screens/create_screen/create_screen_state.dart';
 import 'package:to_do_list/theme/color.dart';
 import 'package:to_do_list/theme/font.dart';
-import 'package:intl/intl.dart';
 
 class CreateScreen extends StatefulWidget {
   final int? rowId;
@@ -45,8 +43,8 @@ class _CreateScreenState extends State<CreateScreen> {
             backgroundColor: kPrimaryColor,
             foregroundColor: Colors.white,
             centerTitle: false,
-            title: Text(
-              "Add new " + appName,
+            title: const Text(
+              "Add new $appName",
               textAlign: TextAlign.start,
               style: appBarTextStyle,
             ),
@@ -66,19 +64,16 @@ class _CreateScreenState extends State<CreateScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
+                            const Text(
                               "To-Do Title",
                               style: heading2TextStyle,
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             FormBuilderTextField(
                               name: 'title',
-                              initialValue:
-                                  widget.title == null ? null : widget.title,
-                              decoration: new InputDecoration(
-                                  border: new OutlineInputBorder(
-                                    borderSide:
-                                        new BorderSide(color: Colors.grey),
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
                                   ),
                                   hintText:
                                       'Please key in your To-Do title here.'),
@@ -89,12 +84,12 @@ class _CreateScreenState extends State<CreateScreen> {
                               ]),
                               onChanged: (value) => {contentUpdated = true},
                             ),
-                            SizedBox(height: 33),
-                            Text(
+                            const SizedBox(height: 33),
+                            const Text(
                               "Start Date",
                               style: heading2TextStyle,
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             FormBuilderDateTimePicker(
                               name: 'start_date',
                               onChanged: (val) {
@@ -105,24 +100,23 @@ class _CreateScreenState extends State<CreateScreen> {
                               format: DateTimeHelper.formatter,
                               decoration: InputDecoration(
                                   labelText: 'Select a date',
-                                  border: new OutlineInputBorder(
-                                    borderSide:
-                                        new BorderSide(color: Colors.grey),
+                                  border: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
                                   ),
                                   suffixIcon: InkWell(
-                                      child:
-                                          Icon(Icons.arrow_drop_down, size: 34),
-                                      onTap: () {})),
+                                      onTap: () {},
+                                      child: const Icon(Icons.arrow_drop_down,
+                                          size: 34))),
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
                               ]),
                             ),
-                            SizedBox(height: 33),
-                            Text(
+                            const SizedBox(height: 33),
+                            const Text(
                               "Estimated End Date",
                               style: heading2TextStyle,
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             FormBuilderDateTimePicker(
                               name: 'end_date',
                               onChanged: (val) {
@@ -133,14 +127,13 @@ class _CreateScreenState extends State<CreateScreen> {
                               initialValue: widget.endDateTime,
                               decoration: InputDecoration(
                                   labelText: 'Select a date',
-                                  border: new OutlineInputBorder(
-                                    borderSide:
-                                        new BorderSide(color: Colors.grey),
+                                  border: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
                                   ),
                                   suffixIcon: InkWell(
-                                      child:
-                                          Icon(Icons.arrow_drop_down, size: 34),
-                                      onTap: () {})),
+                                      onTap: () {},
+                                      child: const Icon(Icons.arrow_drop_down,
+                                          size: 34))),
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
                               ]),
@@ -150,6 +143,36 @@ class _CreateScreenState extends State<CreateScreen> {
                       )),
                     ),
                     GestureDetector(
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          if (contentUpdated && widget.title != null) {
+                            _createBloc.add(UpdateEvent(
+                              rowId: widget.rowId!,
+                              title: _formKey
+                                  .currentState!.fields["title"]!.value
+                                  .toString(),
+                              startDateTime: DateTimeHelper.formatter.format(
+                                  _formKey.currentState!.fields["start_date"]!
+                                      .value as DateTime),
+                              endDateTime: DateTimeHelper.formatter.format(
+                                  _formKey.currentState!.fields["end_date"]!
+                                      .value as DateTime),
+                            ));
+                          } else {
+                            _createBloc.add(CreateEvent(
+                              title: _formKey
+                                  .currentState!.fields["title"]!.value
+                                  .toString(),
+                              startDateTime: DateTimeHelper.formatter.format(
+                                  _formKey.currentState!.fields["start_date"]!
+                                      .value as DateTime),
+                              endDateTime: DateTimeHelper.formatter.format(
+                                  _formKey.currentState!.fields["end_date"]!
+                                      .value as DateTime),
+                            ));
+                          }
+                        }
+                      },
                       child: Container(
                           width: double.infinity,
                           color: kSecondaryColor,
@@ -161,34 +184,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               textAlign: TextAlign.center,
                             ),
                           )),
-                      onTap: () async {
-                        if (_formKey.currentState!.validate()) {
-                          if (contentUpdated && widget.title != null) {
-                            _createBloc.add(UpdateEvent(
-                              rowId: widget.rowId!,
-                              title:
-                                  _formKey.currentState!.fields["title"]!.value,
-                              startDateTime: DateTimeHelper.formatter.format(
-                                  _formKey.currentState!.fields["start_date"]!
-                                      .value),
-                              endDateTime: DateTimeHelper.formatter.format(
-                                  _formKey
-                                      .currentState!.fields["end_date"]!.value),
-                            ));
-                          } else {
-                            _createBloc.add(CreateEvent(
-                              title:
-                                  _formKey.currentState!.fields["title"]!.value,
-                              startDateTime: DateTimeHelper.formatter.format(
-                                  _formKey.currentState!.fields["start_date"]!
-                                      .value),
-                              endDateTime: DateTimeHelper.formatter.format(
-                                  _formKey
-                                      .currentState!.fields["end_date"]!.value),
-                            ));
-                          }
-                        }
-                      },
                     ),
                   ],
                 ),

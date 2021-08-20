@@ -3,5 +3,5 @@ import 'screens/home_screen/home_screen_test.dart';
 
 void main() {
   DateTimeHelperTest();
-  HomeScreenTest();
+  homeScreenTest();
 }

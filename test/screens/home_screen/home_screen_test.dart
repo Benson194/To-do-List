@@ -19,7 +19,7 @@ class HomeStateFake extends Fake implements HomeState {}
 
 class HomeEventFake extends Fake implements HomeEvent {}
 
-void HomeScreenTest() {
+void homeScreenTest() {
   late HomeBlocMock homeBlocMock;
   late List<NoteModel> noteModelList;
 

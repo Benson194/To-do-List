@@ -1,7 +1,5 @@
-import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:to_do_list/config/constant.dart';
 import 'package:to_do_list/helper/date_time_helper.dart';
 import 'package:to_do_list/helper/ui_helper.dart';
@@ -13,11 +11,9 @@ import 'package:to_do_list/screens/create_screen/create_screen_state.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_bloc.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_event.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_state.dart';
-import 'package:to_do_list/services/local_db.dart';
 import 'package:to_do_list/theme/color.dart';
 import 'package:to_do_list/theme/font.dart';
 import 'package:to_do_list/theme/shape.dart';
-import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -44,13 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  _openDB() async {
+  Future<void> _openDB() async {
     await Repository().openDB().then((value) {
       _homeBloc.add(GetNoteEvent());
     });
   }
 
-  updateCompletedNote(int index) {
+  void updateCompletedNote(int index) {
     setState(() {
       updatedListIndex = index;
     });
@@ -104,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: kPrimaryColor,
             foregroundColor: Colors.white,
             centerTitle: false,
-            title: Text(
+            title: const Text(
               appName,
               textAlign: TextAlign.start,
               style: appBarTextStyle,
@@ -121,8 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               Navigator.pushNamed(context, createScreenRouteName);
             },
-            child: const Icon(Icons.add),
             backgroundColor: Colors.red,
+            child: const Icon(Icons.add),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
@@ -169,7 +165,7 @@ class NoteList extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(cardBorderRadius),
                         topLeft: Radius.circular(cardBorderRadius),
@@ -190,13 +186,13 @@ class NoteList extends StatelessWidget {
                             style: heading1TextStyle,
                             textAlign: TextAlign.start,
                           ),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 15),
                           Row(children: [
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Start Date",
                                     textAlign: TextAlign.start,
                                     style: heading3TextStyle,
@@ -216,7 +212,7 @@ class NoteList extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "End Date",
                                     textAlign: TextAlign.start,
                                     style: heading3TextStyle,
@@ -236,7 +232,7 @@ class NoteList extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Time Left",
                                     textAlign: TextAlign.start,
                                     style: heading3TextStyle,
@@ -259,7 +255,7 @@ class NoteList extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(cardBorderRadius),
                         bottomRight: Radius.circular(cardBorderRadius),
                       ),
@@ -291,7 +287,7 @@ class NoteList extends StatelessWidget {
                                       : true,
                               child: Row(
                                 children: [
-                                  Padding(
+                                  const Padding(
                                     padding: const EdgeInsets.only(right: 8.0),
                                     child: Text("Tick if completed"),
                                   ),
