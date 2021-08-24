@@ -1,15 +1,12 @@
-import 'package:fimber/fimber.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_list/helper/date_time_helper.dart';
-import 'package:to_do_list/model/NoteModel.dart';
 import 'package:to_do_list/repository/repository.dart';
 import 'package:to_do_list/screens/create_screen/create_screen_event.dart';
 import 'package:to_do_list/screens/create_screen/create_screen_state.dart';
 
 class CreateBloc extends Bloc<CreateEventAbstract, CreateState> {
-  late Repository _repository;
-  CreateBloc() : super(CreateStateInitialized()) {
-    _repository = Repository();
+  late final Repository _repository;
+  CreateBloc(Repository repository) : super(CreateStateInitialized()) {
+    _repository = repository;
   }
 
   @override

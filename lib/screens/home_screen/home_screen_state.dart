@@ -1,4 +1,4 @@
-import 'package:to_do_list/model/NoteModel.dart';
+import 'package:to_do_list/model/note_model.dart';
 
 abstract class HomeState {}
 

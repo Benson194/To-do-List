@@ -1,14 +1,14 @@
-import 'package:fimber/fimber.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_list/model/NoteModel.dart';
+import 'package:to_do_list/model/note_model.dart';
 import 'package:to_do_list/repository/repository.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_event.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  late Repository _repository;
-  HomeBloc() : super(HomeStateInitialized()) {
-    _repository = Repository();
+  late final Repository _repository;
+
+  HomeBloc(Repository repository) : super(HomeStateInitialized()) {
+    _repository = repository;
   }
 
   @override
@@ -16,7 +16,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       if (event is GetNoteEvent) {
         yield GetNoteLoading();
-        List<NoteModel>? _noteList = await _repository.getNoteList();
+        final List<NoteModel>? _noteList = await _repository.getNoteList();
         yield GetNoteSuccess(noteList: _noteList);
       } else if (event is UpdateNoteEvent) {
         yield UpdateNoteLoading();
@@ -26,7 +26,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield UpdateNoteCompletedSuccess(rowId: event.index);
       }
     } catch (e) {
-      Fimber.d("error: " + e.toString());
+      print("error: $e");
       yield GetNoteError();
     }
   }

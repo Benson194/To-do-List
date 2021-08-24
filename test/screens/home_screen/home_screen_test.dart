@@ -1,69 +1,92 @@
+import 'dart:io';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:to_do_list/helper/date_time_helper.dart';
-import 'package:to_do_list/main.dart';
-import 'package:to_do_list/model/NoteModel.dart';
-import 'package:to_do_list/repository/repository.dart';
 import 'package:to_do_list/screens/create_screen/create_screen_bloc.dart';
+import 'package:to_do_list/screens/create_screen/create_screen_event.dart';
+import 'package:to_do_list/screens/create_screen/create_screen_state.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_bloc.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_event.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_state.dart';
 import 'package:to_do_list/screens/home_screen/home_screen.dart';
 
-class HomeBlocMock extends MockBloc<HomeEvent, HomeState> implements HomeBloc {}
+import '../../model/note_model_test.dart';
 
-class HomeStateFake extends Fake implements HomeState {}
+class MockHomeBloc extends MockBloc<HomeEvent, HomeState> implements HomeBloc {}
 
-class HomeEventFake extends Fake implements HomeEvent {}
+class FakeHomeState extends Fake implements HomeState {}
+
+class FakeHomeEvent extends Fake implements HomeEvent {}
+
+class MockCreateBloc extends MockBloc<CreateEventAbstract, CreateState>
+    implements CreateBloc {}
+
+class FakeCreateState extends Fake implements CreateState {}
+
+class FakeCreateEvent extends Fake implements CreateEvent {}
 
 void homeScreenTest() {
-  late HomeBlocMock homeBlocMock;
-  late List<NoteModel> noteModelList;
+  late MockHomeBloc mockHomeBloc;
+  late MockCreateBloc mockCreateBloc;
+  late Widget homeScreen;
+  late Directory currentDirectory;
 
   setUp(() {
-    registerFallbackValue<HomeState>(HomeStateFake());
-    registerFallbackValue<HomeEvent>(HomeEventFake());
-    homeBlocMock = HomeBlocMock();
-    noteModelList = [
-      NoteModel(
-          startDateTime: DateTimeHelper.formatter.parse('12 Jul 2021 12:33:00'),
-          endDateTime: DateTimeHelper.formatter.parse('13 Jul 2021 13:34:00'),
-          completed: false,
-          title: "Unit Test")
-    ];
+    registerFallbackValue<HomeState>(FakeHomeState());
+    registerFallbackValue<HomeEvent>(FakeHomeEvent());
+    registerFallbackValue<CreateEvent>(FakeCreateEvent());
+    registerFallbackValue<CreateState>(FakeCreateState());
+    mockHomeBloc = MockHomeBloc();
+    mockCreateBloc = MockCreateBloc();
+    homeScreen = MultiBlocProvider(
+        providers: [
+          BlocProvider<CreateBloc>.value(
+            value: mockCreateBloc,
+          ),
+          BlocProvider<HomeBloc>.value(
+            value: mockHomeBloc,
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: NoteList(
+            homeBloc: mockHomeBloc,
+            noteModelList: NoteModelTest().generateFake(),
+          ),
+        ));
+    currentDirectory = Directory.current;
   });
   tearDown(() {
-    homeBlocMock.close();
+    mockHomeBloc.close();
   });
-  group('Mock HomeScreen\n', () {
+  group('HomeScreen -', () {
     testWidgets(
-        '1. Should show the note title, start date and end date after note is added',
+        '1. Given the empty note list, there should be text displayed instead of the empty note list.',
         (WidgetTester tester) async {
-      whenListen(
-          homeBlocMock,
-          Stream.fromIterable(
-              [GetNoteLoading(), GetNoteSuccess(noteList: noteModelList)]));
-      await tester.pumpWidget(
-        MultiBlocProvider(
-            providers: [
-              BlocProvider<CreateBloc>.value(
-                value: CreateBloc(),
-              ),
-              BlocProvider<HomeBloc>.value(
-                value: HomeBloc(),
-              ),
-            ],
-            child: MaterialApp(
-              home: NoteList(
-                homeBloc: HomeBloc(),
-                noteModelList: noteModelList,
-              ),
-            )),
-      );
-      await tester.pump(Duration.zero);
+      await tester.pumpWidget(MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: NoteList(
+          homeBloc: mockHomeBloc,
+          noteModelList: const [],
+        ),
+      ));
+      expect(find.byKey(const Key("Empty note list")), findsOneWidget);
+    });
+    testWidgets(
+        '2. Given the mocked note list, the note list should show the same title, start date, and end date.',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: NoteList(
+          homeBloc: mockHomeBloc,
+          noteModelList: NoteModelTest().generateFake(),
+        ),
+      ));
+      expect(find.byKey(const Key("Empty note list")), findsNothing);
       expect(find.text('Unit Test'), findsOneWidget);
       expect(
           find.text(DateTimeHelper.formatterToDisplay
@@ -75,12 +98,12 @@ void homeScreenTest() {
           findsOneWidget);
     });
 
-    // this is how u can test the bloc in unit test
-    // blocTest<HomeBloc, HomeState>(
-    //   'emits [] when nothing is added',
-    //   build: () => homeBloc,
-    //   act: (homeBloc) => homeBloc.add(GetNoteEvent()),
-    //   expect: () => [isA<GetNoteLoading>(), isA<GetNoteError>()],
-    // );
+    testWidgets('3. Golden test', (WidgetTester tester) async {
+      await tester.pumpWidget(homeScreen);
+      await expectLater(
+          find.byWidget(homeScreen),
+          matchesGoldenFile(
+              '${currentDirectory.path}/test/screens/home_screen/home_screen_test.png'));
+    });
   });
 }
