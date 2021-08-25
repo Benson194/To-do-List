@@ -71,6 +71,7 @@ class _CreateScreenState extends State<CreateScreen> {
                             const SizedBox(height: 20),
                             FormBuilderTextField(
                               name: 'title',
+                              key: const Key("Note Title"),
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.grey),
@@ -92,6 +93,7 @@ class _CreateScreenState extends State<CreateScreen> {
                             const SizedBox(height: 20),
                             FormBuilderDateTimePicker(
                               name: 'start_date',
+                              key: const Key("Start Date time picker"),
                               onChanged: (val) {
                                 contentUpdated = true;
                               },
@@ -119,6 +121,7 @@ class _CreateScreenState extends State<CreateScreen> {
                             const SizedBox(height: 20),
                             FormBuilderDateTimePicker(
                               name: 'end_date',
+                              key: const Key("End Date time picker"),
                               onChanged: (val) {
                                 contentUpdated = true;
                               },
@@ -176,6 +179,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       child: Container(
                           width: double.infinity,
                           color: kSecondaryColor,
+                          key: const Key("Submit button"),
                           child: Padding(
                             padding: const EdgeInsets.all(18.0),
                             child: Text(

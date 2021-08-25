@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,19 +14,7 @@ import 'package:to_do_list/screens/home_screen/home_screen_state.dart';
 import 'package:to_do_list/screens/home_screen/home_screen.dart';
 
 import '../../model/note_model_test.dart';
-
-class MockHomeBloc extends MockBloc<HomeEvent, HomeState> implements HomeBloc {}
-
-class FakeHomeState extends Fake implements HomeState {}
-
-class FakeHomeEvent extends Fake implements HomeEvent {}
-
-class MockCreateBloc extends MockBloc<CreateEventAbstract, CreateState>
-    implements CreateBloc {}
-
-class FakeCreateState extends Fake implements CreateState {}
-
-class FakeCreateEvent extends Fake implements CreateEvent {}
+import 'home_screen_bloc_test.dart';
 
 void homeScreenTest() {
   late MockHomeBloc mockHomeBloc;

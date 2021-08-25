@@ -132,7 +132,7 @@ class NoteList extends StatelessWidget {
     Key? key,
     required this.noteModelList,
     required HomeBloc homeBloc,
-  })   : _homeBloc = homeBloc,
+  })  : _homeBloc = homeBloc,
         super(key: key);
 
   final List<NoteModel> noteModelList;

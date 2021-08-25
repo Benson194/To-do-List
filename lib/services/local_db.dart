@@ -36,7 +36,7 @@ class LocalDatabase {
     });
   }
 
-  Future<List<NoteModel>?> getNoteList() async {
+  Future<List<NoteModel>> getNoteList() async {
     final List<Map<String, Object?>> maps = await db.query(tableName);
     if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
@@ -70,6 +70,10 @@ class LocalDatabase {
     if (rowUpdated != 1) {
       throw Error();
     }
+  }
+
+  Future<void> deleteTable() async {
+    await db.delete(tableName);
   }
 
   Future close() async => db.close();
