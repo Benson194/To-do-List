@@ -25,7 +25,7 @@ class UIUtitilies {
                     shadowColor: Colors.black,
                   ),
                   onPressed: () {},
-                  child: CircularProgressIndicator(
+                  child: const CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor)),
                 ),
               )

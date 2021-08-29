@@ -22,9 +22,16 @@ class Repository {
     await LocalDatabase().deleteTable();
   }
 
-  Future<void> createNote(String startDatetime, String endDateTime,
-      bool completed, String title) async {
-    await LocalDatabase().insert(startDatetime, endDateTime, completed, title);
+  Future<void> createNote(
+      {required String startDatetime,
+      required String endDateTime,
+      required bool completed,
+      required String title}) async {
+    await LocalDatabase().insert(
+        startDatetime: startDatetime,
+        endDateTime: endDateTime,
+        completed: completed,
+        title: title);
   }
 
   Future<void> updateNote(
@@ -33,7 +40,7 @@ class Repository {
   }
 
   Future<List<NoteModel>> getNoteList() async {
-    return await LocalDatabase().getNoteList();
+    return LocalDatabase().getNoteList();
   }
 
   Future<void> updateCompleted(int columnId, int completed) async {

@@ -1,4 +1,3 @@
-import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_list/config/constant.dart';
@@ -266,65 +265,63 @@ class NoteList extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(cardBorderRadius),
-                          bottomRight: Radius.circular(cardBorderRadius),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(cardBorderRadius),
+                            bottomRight: Radius.circular(cardBorderRadius),
+                          ),
+                          color: Colors.grey[100],
                         ),
-                        color: Colors.grey[100],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Status: "),
-                                Text(
-                                  noteModelList[i].completed == null
-                                      ? "Incomplete"
-                                      : noteModelList[i].completed!
-                                          ? "Completed"
-                                          : "Incomplete",
-                                  style: heading4TextStyle,
-                                )
-                              ],
-                            ),
-                            Visibility(
-                                visible: noteModelList[i].completed == null
-                                    ? true
-                                    : noteModelList[i].completed!
-                                        ? false
-                                        : true,
-                                child: Row(
+                                Row(
                                   children: [
-                                    const Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                      child: Text("Tick if completed"),
-                                    ),
-                                    Container(
-                                      height: 24.0,
-                                      width: 24.0,
-                                      child: Checkbox(
-                                        value: noteModelList[i].completed,
-                                        onChanged: (value) {
-                                          _homeBloc.add(
-                                              UpdateNoteCompletedEvent(
-                                                  index: i));
-                                          _homeBloc.add(UpdateNoteEvent(
-                                              rowId: noteModelList[i].id!,
-                                              completed: value!));
-                                        },
-                                      ),
-                                    ),
+                                    const Text("Status: "),
+                                    Text(
+                                      noteModelList[i].completed == null
+                                          ? "Incomplete"
+                                          : noteModelList[i].completed!
+                                              ? "Completed"
+                                              : "Incomplete",
+                                      style: heading4TextStyle,
+                                    )
                                   ],
-                                )),
-                          ],
-                        ),
-                      ),
-                    )
+                                ),
+                                (() {
+                                  if (noteModelList[i].completed != null &&
+                                      !noteModelList[i].completed!) {
+                                    return Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 8.0),
+                                          child: Text("Tick if completed"),
+                                        ),
+                                        SizedBox(
+                                          height: 24.0,
+                                          width: 24.0,
+                                          child: Checkbox(
+                                            value: noteModelList[i].completed,
+                                            onChanged: (value) {
+                                              _homeBloc.add(
+                                                  UpdateNoteCompletedEvent(
+                                                      index: i));
+                                              _homeBloc.add(UpdateNoteEvent(
+                                                  rowId: noteModelList[i].id!,
+                                                  completed: value!));
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    return const SizedBox.shrink();
+                                  }
+                                }()),
+                              ]),
+                        ))
                   ],
                 ),
               ),

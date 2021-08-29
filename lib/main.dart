@@ -1,33 +1,31 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:fimber/fimber.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_form_builder/localization/form_builder_localizations.dart';
 import 'package:to_do_list/config/routes.dart';
 import 'package:to_do_list/repository/repository.dart';
 import 'package:to_do_list/screens/create_screen/create_screen_bloc.dart';
 import 'package:to_do_list/screens/home_screen/home_screen.dart';
 import 'package:to_do_list/screens/home_screen/home_screen_bloc.dart';
 import 'package:to_do_list/theme/color.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'config/constant.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  if (false) {
-    runApp(
-      DevicePreview(
-        enabled: kDebugMode,
-        builder: (context) => MyApp(),
-      ),
-    );
-  } else {
-    runApp(MyApp());
-  }
+  // if (false) {
+  //   runApp(
+  //     DevicePreview(
+  //       enabled: kDebugMode,
+  //       builder: (context) => MyApp(),
+  //     ),
+  //   );
+  // } else {
+  //   runApp(MyApp());
+  // }
+  runApp(MyApp());
 
-  var tree = DebugTree();
+  final tree = DebugTree();
   tree.colorizeMap["D"] = ColorizeStyle(
       [AnsiStyle(AnsiSelection.foreground, color: AnsiColor.yellow)]);
   Fimber.plantTree(tree);

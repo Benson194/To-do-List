@@ -100,7 +100,6 @@ class _CreateScreenState extends State<CreateScreen> {
                                     contentUpdated = true;
                                   },
                                   initialValue: widget.startDateTime,
-                                  inputType: InputType.both,
                                   format: DateTimeHelper.formatter,
                                   decoration: InputDecoration(
                                       labelText: 'Select a date',
@@ -130,7 +129,6 @@ class _CreateScreenState extends State<CreateScreen> {
                                     contentUpdated = true;
                                   },
                                   format: DateTimeHelper.formatter,
-                                  inputType: InputType.both,
                                   initialValue: widget.endDateTime,
                                   decoration: InputDecoration(
                                       labelText: 'Select a date',

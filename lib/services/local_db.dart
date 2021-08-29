@@ -47,10 +47,18 @@ class LocalDatabase {
     return [];
   }
 
-  Future<void> insert(String startDatetime, String endDateTime, bool completed,
-      String title) async {
-    await db.insert(tableName,
-        NoteModel.toMap(startDatetime, endDateTime, completed, title));
+  Future<void> insert(
+      {required String startDatetime,
+      required String endDateTime,
+      required bool completed,
+      required String title}) async {
+    await db.insert(
+        tableName,
+        NoteModel.toMap(
+            startDatetime: startDatetime,
+            endDateTime: endDateTime,
+            completed: completed,
+            title: title));
   }
 
   Future<void> updateCompleted(int _columnId, int _completed) async {

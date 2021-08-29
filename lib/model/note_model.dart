@@ -16,13 +16,16 @@ class NoteModel {
     required this.title,
   });
 
-  static Map<String, Object?> toMap(String _startDatetime, String _endDateTime,
-      bool _completed, String _title) {
+  static Map<String, Object?> toMap(
+      {required String startDatetime,
+      required String endDateTime,
+      required bool completed,
+      required String title}) {
     final map = <String, Object?>{
-      LocalDatabase().columnTitle: _title,
-      LocalDatabase().columnStartDateTime: _startDatetime,
-      LocalDatabase().columnEndDateTime: _endDateTime,
-      LocalDatabase().columnCompleted: _completed == true ? 1 : 0
+      LocalDatabase().columnTitle: title,
+      LocalDatabase().columnStartDateTime: startDatetime,
+      LocalDatabase().columnEndDateTime: endDateTime,
+      LocalDatabase().columnCompleted: completed == true ? 1 : 0
     };
     return map;
   }
