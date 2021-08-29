@@ -58,6 +58,11 @@ void main() {
     await tester.enterText(find.byKey(const Key("Note Title")), 'Hello!');
 
     // tap on Start date time DateTimePicker
+    await tester.dragUntilVisible(
+      find.byKey(const Key("Start Date time picker")),
+      find.byKey(const Key("Create note scrollview")),
+      const Offset(0, -200),
+    );
     await tester.tap(find.byKey(const Key("Start Date time picker")));
     await tester.pumpAndSettle();
     await tester.tap(find.text('10'));
@@ -68,6 +73,11 @@ void main() {
     await tester.pumpAndSettle();
 
     // tap on End date time DateTimePicker
+    await tester.dragUntilVisible(
+      find.byKey(const Key("End Date time picker")),
+      find.byKey(const Key("Create note scrollview")),
+      const Offset(0, -200),
+    );
     await tester.tap(find.byKey(const Key("End Date time picker")));
     await tester.pumpAndSettle();
     await tester.tap(find.text('13'));

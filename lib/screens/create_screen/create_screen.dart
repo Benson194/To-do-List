@@ -58,92 +58,98 @@ class _CreateScreenState extends State<CreateScreen> {
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
+                          key: const Key("Create note scrollview"),
                           child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 38.0, horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            const Text(
-                              "To-Do Title",
-                              style: heading2TextStyle,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 38.0, horizontal: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const Text(
+                                  "To-Do Title",
+                                  style: heading2TextStyle,
+                                ),
+                                const SizedBox(height: 20),
+                                FormBuilderTextField(
+                                  name: 'title',
+                                  key: const Key("Note Title"),
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                      hintText:
+                                          'Please key in your To-Do title here.'),
+                                  maxLines: 10,
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                    FormBuilderValidators.max(context, 400),
+                                  ]),
+                                  onChanged: (value) => {contentUpdated = true},
+                                ),
+                                const SizedBox(height: 33),
+                                const Text(
+                                  "Start Date",
+                                  style: heading2TextStyle,
+                                ),
+                                const SizedBox(height: 20),
+                                FormBuilderDateTimePicker(
+                                  name: 'start_date',
+                                  key: const Key("Start Date time picker"),
+                                  onChanged: (val) {
+                                    contentUpdated = true;
+                                  },
+                                  initialValue: widget.startDateTime,
+                                  inputType: InputType.both,
+                                  format: DateTimeHelper.formatter,
+                                  decoration: InputDecoration(
+                                      labelText: 'Select a date',
+                                      border: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                      suffixIcon: InkWell(
+                                          onTap: () {},
+                                          child: const Icon(
+                                              Icons.arrow_drop_down,
+                                              size: 34))),
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                  ]),
+                                ),
+                                const SizedBox(height: 33),
+                                const Text(
+                                  "Estimated End Date",
+                                  style: heading2TextStyle,
+                                ),
+                                const SizedBox(height: 20),
+                                FormBuilderDateTimePicker(
+                                  name: 'end_date',
+                                  key: const Key("End Date time picker"),
+                                  onChanged: (val) {
+                                    contentUpdated = true;
+                                  },
+                                  format: DateTimeHelper.formatter,
+                                  inputType: InputType.both,
+                                  initialValue: widget.endDateTime,
+                                  decoration: InputDecoration(
+                                      labelText: 'Select a date',
+                                      border: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                      suffixIcon: InkWell(
+                                          onTap: () {},
+                                          child: const Icon(
+                                              Icons.arrow_drop_down,
+                                              size: 34))),
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                  ]),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 20),
-                            FormBuilderTextField(
-                              name: 'title',
-                              key: const Key("Note Title"),
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  hintText:
-                                      'Please key in your To-Do title here.'),
-                              maxLines: 10,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                                FormBuilderValidators.max(context, 400),
-                              ]),
-                              onChanged: (value) => {contentUpdated = true},
-                            ),
-                            const SizedBox(height: 33),
-                            const Text(
-                              "Start Date",
-                              style: heading2TextStyle,
-                            ),
-                            const SizedBox(height: 20),
-                            FormBuilderDateTimePicker(
-                              name: 'start_date',
-                              key: const Key("Start Date time picker"),
-                              onChanged: (val) {
-                                contentUpdated = true;
-                              },
-                              initialValue: widget.startDateTime,
-                              inputType: InputType.both,
-                              format: DateTimeHelper.formatter,
-                              decoration: InputDecoration(
-                                  labelText: 'Select a date',
-                                  border: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  suffixIcon: InkWell(
-                                      onTap: () {},
-                                      child: const Icon(Icons.arrow_drop_down,
-                                          size: 34))),
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                            ),
-                            const SizedBox(height: 33),
-                            const Text(
-                              "Estimated End Date",
-                              style: heading2TextStyle,
-                            ),
-                            const SizedBox(height: 20),
-                            FormBuilderDateTimePicker(
-                              name: 'end_date',
-                              key: const Key("End Date time picker"),
-                              onChanged: (val) {
-                                contentUpdated = true;
-                              },
-                              format: DateTimeHelper.formatter,
-                              inputType: InputType.both,
-                              initialValue: widget.endDateTime,
-                              decoration: InputDecoration(
-                                  labelText: 'Select a date',
-                                  border: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  suffixIcon: InkWell(
-                                      onTap: () {},
-                                      child: const Icon(Icons.arrow_drop_down,
-                                          size: 34))),
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                            ),
-                          ],
-                        ),
-                      )),
+                          )),
                     ),
                     GestureDetector(
                       onTap: () async {
